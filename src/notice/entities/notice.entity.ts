@@ -17,4 +17,7 @@ export class Notice {
 
     @CreateDateColumn()
     created_at:Date;
+
+    @Column({type:'integer'})
+    view:number;
 }
