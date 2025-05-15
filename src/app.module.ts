@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { NoticeModule } from './notice/notice.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { NoticeModule } from './notice/notice.module';
         synchronize:true
       }))
   }),
-    NoticeModule],
+    NoticeModule,
+    UserModule],
   controllers: [AppController],
   providers: [AppService],
 })
