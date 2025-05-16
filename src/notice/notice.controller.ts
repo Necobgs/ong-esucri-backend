@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { NoticeService } from './notice.service';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { UpdateNoticeDto } from './dto/update-notice.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('notice')
 export class NoticeController {
@@ -9,12 +10,13 @@ export class NoticeController {
 
   @Post()
   create(@Body() createNoticeDto: CreateNoticeDto) {
+    console.log(createNoticeDto);
     return this.noticeService.create(createNoticeDto);
   }
 
   @Get()
-  findAll() {
-    return this.noticeService.findAll();
+  findAll(@Query() pagination:PaginationDto) {
+    return this.noticeService.findAll(pagination);
   }
 
   @Get(':id')

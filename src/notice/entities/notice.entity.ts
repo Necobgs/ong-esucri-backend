@@ -18,6 +18,6 @@ export class Notice {
     @CreateDateColumn()
     created_at:Date;
 
-    @Column({type:'integer'})
+    @Column({type:'integer',default:0})
     view:number;
 }

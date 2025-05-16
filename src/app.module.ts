@@ -23,7 +23,8 @@ import { ActionModule } from './action/action.module';
         username:configService.get<string>('DATABASE_USERNAME'),
         port:+configService.get('DATABASE_PORT'),
         autoLoadEntities:true,
-        synchronize:true
+        synchronize:true,
+        logging:true
       }))
   }),
     NoticeModule,
