@@ -1,10 +1,10 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class Notice {
 
-    @PrimaryGeneratedColumn()
-    id:number;
+    @PrimaryColumn('uuid')
+    id:string;
 
     @Column({type:'varchar',length:100})
     title:string;

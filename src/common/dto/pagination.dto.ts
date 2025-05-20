@@ -14,7 +14,7 @@ export class PaginationDto {
 
   @IsOptional()
   @IsString()
-  sortBy?: string;
+  sortBy?: string = 'created_at';
 
   @IsOptional()
   @IsIn(['ASC', 'DESC', 'asc', 'desc'])

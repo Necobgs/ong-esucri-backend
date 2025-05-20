@@ -1,26 +1,85 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
+import { randomUUID } from 'crypto';
+import * as bcrypt from 'bcrypt';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  constructor(
+    @InjectRepository(User) private readonly userRepository:Repository<User>
+  ){}
+
+  async create(createUserDto: CreateUserDto) {
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds); 
+    const hashedPassword = await bcrypt.hash(createUserDto.password,salt);
+    const userExists = await this.userRepository.findOneBy({email:createUserDto.email});
+    if(userExists) throw new HttpException('Email já está em uso',HttpStatus.BAD_REQUEST);
+    const newUser = this.userRepository.create({
+      ...createUserDto,
+      password:hashedPassword,
+      id:randomUUID()
+    });
+    const createdUser = await this.userRepository.save(newUser);
+    const { password, ...userWithoutPassword } = createUserDto;
+    return userWithoutPassword;
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(paginationDTO:PaginationDto) {
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'created_at',
+      order = 'ASC',
+    } = paginationDTO;
+
+    const skip = (page - 1) * limit
+    return await this.userRepository.find({
+      skip:skip,
+      take:limit,
+      order:{
+        [sortBy]: order.toUpperCase()
+      },
+      select:['id','email','username']
+    },
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return this.userRepository.findBy({id});
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findByEmail(email: string) {
+    return this.userRepository.findOneBy({email});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.findOneByOrFail({id});
+    const updatedUser = {
+      ...user,
+      ...updateUserDto,
+      
+    }
+    const {password, ...updatedUserWithoutPassword} = await this.userRepository.save(updatedUser);
+    return updatedUserWithoutPassword;
+  }
+
+  async validateUser(email:string,password:string){
+    const user = await this.findByEmail(email);
+    if(user && await bcrypt.compare(password,user.password)){
+      return user;
+    }
+    throw new NotFoundException()
+  }
+
+  async remove(id: string) {
+    const user = await this.userRepository.findOneByOrFail({id});
+    return await this.userRepository.delete(user);;
   }
 }

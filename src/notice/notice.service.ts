@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { UpdateNoticeDto } from './dto/update-notice.dto';
-import { QueryBuilder, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Notice } from './entities/notice.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { skip } from 'node:test';
+import { randomUUID } from 'crypto';
+
 
 @Injectable()
 export class NoticeService {
@@ -18,33 +19,40 @@ export class NoticeService {
 
   async create(createNoticeDto: CreateNoticeDto) {
     const notice = this.repository.create(createNoticeDto);
-    console.log(notice)
+    notice.id = randomUUID();
     return await this.repository.save(notice);
   }
 
   async findAll(paginationDTO:PaginationDto) {
-    const pagination={
-      page:  paginationDTO.page??   1,
-      limit: paginationDTO.limit??  10,
-      sortBy:paginationDTO.sortBy?? 'created_at',
-      order: paginationDTO.order??  'ASC'
-    };
-    const skip = (pagination.page - 1) * pagination.limit
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'created_at',
+      order = 'ASC',
+    } = paginationDTO;
+
+    const skip = (page - 1) * limit
     return await this.repository.find({
       skip:skip,
-      take:pagination.limit
-    });
+      take:limit,
+      order:{
+        [sortBy]: order.toUpperCase()
+      }
+    },
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} notice`;
+  async findOne(id: string) {
+    return await this.repository.findOneBy({id});
   }
 
-  update(id: number, updateNoticeDto: UpdateNoticeDto) {
-    return `This action updates a #${id} notice`;
+  async update(id: string, updateNoticeDto: UpdateNoticeDto) {
+    const notice = await this.repository.findOneOrFail({where:{id}})
+    return await this.repository.merge(notice,updateNoticeDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} notice`;
+  async remove(id: string) {
+    const notice = await this.repository.findOneByOrFail({id})
+    return this.repository.remove([notice]);
   }
 }

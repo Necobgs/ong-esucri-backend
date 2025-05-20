@@ -21,16 +21,16 @@ export class NoticeController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.noticeService.findOne(+id);
+    return this.noticeService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateNoticeDto: UpdateNoticeDto) {
-    return this.noticeService.update(+id, updateNoticeDto);
+    return this.noticeService.update(id, updateNoticeDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.noticeService.remove(+id);
+    return this.noticeService.remove(id);
   }
 }
