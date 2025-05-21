@@ -79,7 +79,10 @@ export class UserService {
   }
 
   async remove(id: string) {
-    const user = await this.userRepository.findOneByOrFail({id});
-    return await this.userRepository.delete(user);;
+    const result = await this.userRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Usuário com id ${id} não encontrado`);
+    }
+    return { message: 'Usuário deletado com sucesso' };
   }
 }
