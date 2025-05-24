@@ -24,7 +24,7 @@ import { ConfigurationModule } from './configuration/configuration.module';
         username:configService.get<string>('DATABASE_USERNAME'),
         port:+configService.get('DATABASE_PORT'),
         autoLoadEntities:true,
-        synchronize:false,
+        synchronize:true,
         logging:true,
       }))
   }),

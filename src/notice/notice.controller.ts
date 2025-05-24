@@ -4,7 +4,7 @@ import { CreateNoticeDto } from './dto/create-notice.dto';
 import { UpdateNoticeDto } from './dto/update-notice.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { NoticeResponseDto } from './dto/response-notice.dto';
+import { NoticeResponseDto } from './dto/response-notice-findAll.dto';
 import { MessageResponseDto } from 'src/common/dto/response-message.dto';
 import { Request,Response } from 'express';
 

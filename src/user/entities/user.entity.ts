@@ -8,13 +8,16 @@ export class User {
     id:string;
 
     @Column({nullable:false})
-    username:string
+    username:string;
 
     @Column({nullable:false})
-    email:string
+    email:string;
 
     @Column({nullable:false})
-    password:string
+    password:string;
+
+    @Column({default:true})
+    activated:boolean;
 
     @CreateDateColumn()
     created_at:Date;

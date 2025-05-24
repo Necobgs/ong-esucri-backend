@@ -33,11 +33,25 @@ export class NoticeService {
 
     const skip = (page - 1) * limit
     return await this.repository.find({
+      select:{
+        id:true,
+        title:true,
+        description:true,
+        created_at:true,
+        view:true,
+        author:{
+          id:true,
+          username:true,
+          created_at:true,
+          email:true
+        }
+      },
       skip:skip,
       take:limit,
       order:{
         [sortBy]: order.toUpperCase()
-      }
+      },
+      relations:['author']  
     },
     );
   }

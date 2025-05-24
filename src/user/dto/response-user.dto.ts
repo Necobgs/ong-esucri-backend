@@ -14,4 +14,7 @@ export class UserResponseDto {
 
   @ApiProperty({ example: '2025-05-20T18:40:12.712Z' })
   created_at: Date;
+
+  @ApiProperty({example: 'true'})
+  activated:boolean
 }

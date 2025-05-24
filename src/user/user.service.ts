@@ -27,7 +27,7 @@ export class UserService {
       id:randomUUID()
     });
     const createdUser = await this.userRepository.save(newUser);
-    const { password, ...userWithoutPassword } = createUserDto;
+    const { password, ...userWithoutPassword } = createdUser;
     return userWithoutPassword;
   }
 
@@ -46,7 +46,7 @@ export class UserService {
       order:{
         [sortBy]: order.toUpperCase()
       },
-      select:['id','email','username']
+      select:['id','email','username','created_at','activated']
     },
     );
   }
@@ -56,7 +56,7 @@ export class UserService {
   }
 
   async findByEmail(email: string) {
-    return this.userRepository.findOneBy({email});
+    return this.userRepository.findOneByOrFail({email});
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -79,10 +79,9 @@ export class UserService {
   }
 
   async remove(id: string) {
-    const result = await this.userRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Usuário com id ${id} não encontrado`);
-    }
+    const user = await this.userRepository.findOneByOrFail({id});
+    user.activated=false;
+    await this.userRepository.save(user)
     return { message: 'Usuário deletado com sucesso' };
   }
 }
