@@ -44,12 +44,9 @@ export class NoticeService {
 
   async findOne(id: string, req:Request,res:Response) {
     const notice = await this.repository.findOneBy({id})
-    console.log('Noticia buscada')
     if(!notice) return res.status(HttpStatus.NOT_FOUND).json(null);
     const cookieName = `news_viewed_${id}`
-    console.log(`Nome do cookie: ${cookieName}`)
     const hasViewed = req.cookies[cookieName]
-    console.log(`hasviewed: ${hasViewed}`)
     if (!hasViewed){
        await this.repository.increment({id},'view',1)
        res.cookie(cookieName,true,{
@@ -58,8 +55,6 @@ export class NoticeService {
        })
        notice.view += 1
     }
-    console.log('incrementado!')
-    console.log(notice)
     return res.json(notice);
   }
 
