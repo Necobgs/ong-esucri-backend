@@ -7,6 +7,7 @@ import { NoticeModule } from './notice/notice.module';
 import { UserModule } from './user/user.module';
 import { ActionModule } from './action/action.module';
 import { ConfigurationModule } from './configuration/configuration.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -24,8 +25,8 @@ import { ConfigurationModule } from './configuration/configuration.module';
         username:configService.get<string>('DATABASE_USERNAME'),
         port:+configService.get('DATABASE_PORT'),
         autoLoadEntities:true,
-        synchronize:true,
-        logging:true
+        synchronize:false,
+        logging:true,
       }))
   }),
     NoticeModule,
