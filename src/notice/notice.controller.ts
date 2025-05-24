@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus, Req, Res } from '@nestjs/common';
 import { NoticeService } from './notice.service';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { UpdateNoticeDto } from './dto/update-notice.dto';
@@ -6,6 +6,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { NoticeResponseDto } from './dto/response-notice.dto';
 import { MessageResponseDto } from 'src/common/dto/response-message.dto';
+import { Request,Response } from 'express';
 
 @ApiTags('Notícias')
 @Controller('notice')
@@ -30,8 +31,8 @@ export class NoticeController {
   @Get(':id')
   @ApiOperation({ summary: 'Busca uma notícia pelo ID' })
   @ApiOkResponse({ type: NoticeResponseDto })
-  findOne(@Param('id') id: string) {
-    return this.noticeService.findOne(id);
+  findOne(@Param('id') id: string, @Req() req:Request, @Res() res: Response) {
+    return this.noticeService.findOne(id,req,res);
   }
 
   @Patch(':id')

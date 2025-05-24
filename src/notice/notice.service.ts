@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { UpdateNoticeDto } from './dto/update-notice.dto';
 import { Repository } from 'typeorm';
@@ -6,7 +6,7 @@ import { Notice } from './entities/notice.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { randomUUID } from 'crypto';
-
+import { Request,Response } from 'express';
 
 @Injectable()
 export class NoticeService {
@@ -42,8 +42,25 @@ export class NoticeService {
     );
   }
 
-  async findOne(id: string) {
-    return await this.repository.findOneBy({id});
+  async findOne(id: string, req:Request,res:Response) {
+    const notice = await this.repository.findOneBy({id})
+    console.log('Noticia buscada')
+    if(!notice) return res.status(HttpStatus.NOT_FOUND).json(null);
+    const cookieName = `news_viewed_${id}`
+    console.log(`Nome do cookie: ${cookieName}`)
+    const hasViewed = req.cookies[cookieName]
+    console.log(`hasviewed: ${hasViewed}`)
+    if (!hasViewed){
+       await this.repository.increment({id},'view',1)
+       res.cookie(cookieName,true,{
+        httpOnly:true,
+        maxAge:24 * 60 * 60 * 1000
+       })
+       notice.view += 1
+    }
+    console.log('incrementado!')
+    console.log(notice)
+    return res.json(notice);
   }
 
   async update(id: string, updateNoticeDto: UpdateNoticeDto) {

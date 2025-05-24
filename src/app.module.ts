@@ -7,7 +7,6 @@ import { NoticeModule } from './notice/notice.module';
 import { UserModule } from './user/user.module';
 import { ActionModule } from './action/action.module';
 import { ConfigurationModule } from './configuration/configuration.module';
-import { join } from 'path';
 
 @Module({
   imports: [
