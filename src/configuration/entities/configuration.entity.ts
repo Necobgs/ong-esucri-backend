@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 
 @Entity()
@@ -13,10 +13,15 @@ export class Configuration {
     @Column({length:100})
     name:string;
 
-    @Column({length:255})
+    @Column({type:'text',nullable:true})
     value:string;
 
-    @CreateDateColumn()
-    created_at:Date
+    @Column({type:"varchar"})
+    type: 'varchar' | 'number' | 'html' | 'text';
 
+    @CreateDateColumn()
+    created_at:Date;
+
+    @UpdateDateColumn()
+    updated_at:Date;
 }

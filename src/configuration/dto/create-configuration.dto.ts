@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { isNotEmpty, IsNotEmpty, isString, IsString } from "class-validator";
 
 export class CreateConfigurationDto {
 
@@ -33,4 +33,14 @@ export class CreateConfigurationDto {
         format:'phone'
     })
     value:string;
+
+    @IsNotEmpty()
+    @IsString()
+    @ApiProperty({
+        example:'"varchar" | "number | "html" | "text"',
+        description:"Tipo de dado da configuração",
+        type:'string',
+        required:true
+    })
+    type:'varchar' | 'number' | 'html' | 'text';
 }
