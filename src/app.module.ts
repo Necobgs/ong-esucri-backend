@@ -7,12 +7,24 @@ import { NoticeModule } from './notice/notice.module';
 import { UserModule } from './user/user.module';
 import { ActionModule } from './action/action.module';
 import { ConfigurationModule } from './configuration/configuration.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal:true
     }),
+  MailerModule.forRootAsync({
+    imports:[ConfigModule],
+    inject:[ConfigService],
+    useFactory: (configService:ConfigService)=>({
+      transport:'smtps://user@domain.com:pass@smtp.domain.com',
+      defaults:{
+        from:'"nest-modules" <modules@nestjs.com>',
+      }
+    })
+  })
+    ,
     TypeOrmModule.forRootAsync({
       imports:[ConfigModule],
       inject:[ConfigService],
