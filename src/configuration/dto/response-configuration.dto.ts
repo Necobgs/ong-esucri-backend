@@ -15,4 +15,11 @@ export class ConfigurationResponseDto {
 
   @ApiProperty({ example: '2024-05-20T15:30:00.000Z' })
   created_at: Date;
+
+  @ApiProperty({example:"varchar"})
+  type:'varchar' | 'number' | 'html' | 'text';
+
+  @ApiProperty({example: "social"})
+  module_name: 'email' | 'transaction' | 'social'
+
 }
