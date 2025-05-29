@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Configuration } from './entities/configuration.entity';
 import { Repository } from 'typeorm';
 import { randomUUID } from 'crypto';
+import { module_name } from './configuration.enum';
 
 @Injectable()
 export class ConfigurationService {
@@ -23,12 +24,16 @@ export class ConfigurationService {
     return await this.configurationRepository.save(config);
   }
 
-  async findAll() {
-    return await this.configurationRepository.find();
+  async findAll(module_name:module_name) {
+    return await this.configurationRepository.findBy({module_name});
   }
 
-  async findOne(id: string) {
+  async findOneById(id: string) {
     return await this.configurationRepository.findOneBy({id});
+  }
+
+  async findOneByKey(key: string) {
+    return await this.configurationRepository.findOneBy({key});
   }
 
   async update(id: string, updateConfigurationDto: UpdateConfigurationDto) {

@@ -2,9 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Query, HttpCode, HttpStatus 
 import { ConfigurationService } from './configuration.service';
 import { CreateConfigurationDto } from './dto/create-configuration.dto';
 import { UpdateConfigurationDto } from './dto/update-configuration.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { ConfigurationResponseDto } from './dto/response-configuration.dto';
+import { module_name } from './configuration.enum';
 
 @ApiTags('Configurações')
 @Controller('configuration')
@@ -20,17 +20,24 @@ export class ConfigurationController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Lista todas as configurações com paginação' })
+  @ApiOperation({ summary: 'Lista todas as configurações pelo módulo' })
   @ApiOkResponse({ type: [ConfigurationResponseDto] })
-  findAll() {
-    return this.configurationService.findAll();
+  findAll(@Query('module_name') module_name:module_name) {
+    return this.configurationService.findAll(module_name);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Busca uma configuração pelo ID' })
   @ApiOkResponse({ type: ConfigurationResponseDto })
-  findOne(@Param('id') id: string) {
-    return this.configurationService.findOne(id);
+  findOneById(@Param('id') id: string) {
+    return this.configurationService.findOneById(id);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Busca uma configuração pelo ID' })
+  @ApiOkResponse({ type: ConfigurationResponseDto })
+  findOneByKey(@Param('key') key: string) {
+    return this.configurationService.findOneByKey(key);
   }
 
   @Patch(':id')

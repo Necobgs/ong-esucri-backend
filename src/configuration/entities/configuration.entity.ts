@@ -1,3 +1,4 @@
+import { module_name, type } from "../configuration.enum";
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 
@@ -16,8 +17,11 @@ export class Configuration {
     @Column({type:'text',nullable:true})
     value:string;
 
-    @Column({type:"varchar"})
-    type: 'varchar' | 'number' | 'html' | 'text';
+    @Column({type:"varchar",enum:['varchar', 'number', 'html', 'text']})
+    type: type;
+
+    @Column({enum: ['email', 'transaction', 'social']})
+    module_name: module_name 
 
     @CreateDateColumn()
     created_at:Date;

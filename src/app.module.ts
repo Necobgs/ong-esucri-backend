@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { ActionModule } from './action/action.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     imports:[ConfigModule],
     inject:[ConfigService],
     useFactory: (configService:ConfigService)=>({
-      transport:'smtps://user@domain.com:pass@smtp.domain.com',
+      transport: 'smtps://user@domain.com:pass@smtp.domain.com',
       defaults:{
         from:'"nest-modules" <modules@nestjs.com>',
       }
@@ -45,7 +46,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
     NoticeModule,
     UserModule,
     ActionModule,
-    ConfigurationModule],
+    ConfigurationModule,
+    EmailModule],
   controllers: [AppController],
   providers: [AppService],
 })
