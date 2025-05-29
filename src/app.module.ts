@@ -38,8 +38,10 @@ import { MailerModule } from '@nestjs-modules/mailer';
         autoLoadEntities:true,
         synchronize:true,
         logging:true,
+        ssl:true
       }))
   }),
+  
     NoticeModule,
     UserModule,
     ActionModule,
