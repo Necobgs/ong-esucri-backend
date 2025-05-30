@@ -11,6 +11,9 @@ export class NoticeResponseDto {
   @ApiProperty({ example: 'Conseguir atingir a meta' })
   description: string;
 
+  @ApiProperty({ example: '/uploads/image.jpg' })
+  image?: string; // Campo opcional para o caminho da imagem
+
   @ApiProperty({ example: 'Na data 12/12/2012 conseguimos...' })
   notice_text: string;
 

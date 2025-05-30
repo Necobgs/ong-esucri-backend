@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, MinLength } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator";
 
 export class CreateNoticeDto {
 
@@ -12,6 +12,11 @@ export class CreateNoticeDto {
         type:'string'
     })
     title:string;
+
+    @ApiProperty({ example: '/uploads/image.jpg', required: false })
+    @IsString()
+    @IsOptional()
+    file: string | null; // Campo opcional para o caminho da imagem
 
     @IsNotEmpty()
     @ApiProperty({

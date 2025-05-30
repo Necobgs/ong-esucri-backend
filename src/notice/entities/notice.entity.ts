@@ -13,6 +13,9 @@ export class Notice {
     @Column({type:'varchar',length:200})
     description:string;
 
+    @Column({ type: 'varchar', length: 255, nullable: true })
+    image?: string | null; // Novo campo para armazenar o caminho da imagem
+
     @Column({type:'text'})
     notice_text:string;
     
