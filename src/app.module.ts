@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NoticeModule } from './notice/notice.module';
 import { UserModule } from './user/user.module';
-import { ActionModule } from './action/action.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailModule } from './email/email.module';
@@ -49,7 +48,6 @@ import * as path from 'path';
     }),
     NoticeModule,
     UserModule,
-    ActionModule,
     ConfigurationModule,
     EmailModule,
   ],
