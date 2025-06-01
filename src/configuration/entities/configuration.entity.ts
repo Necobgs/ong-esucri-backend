@@ -20,7 +20,7 @@ export class Configuration {
     @Column({type:"varchar",enum:['varchar', 'number', 'html', 'text']})
     type: type;
 
-    @Column({enum: ['email', 'transaction', 'social']})
+    @Column({type:"varchar", enum: ['email', 'transaction', 'social']})
     module_name: module_name 
 
     @CreateDateColumn()

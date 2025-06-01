@@ -5,6 +5,7 @@ import { UpdateConfigurationDto } from './dto/update-configuration.dto';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { ConfigurationResponseDto } from './dto/response-configuration.dto';
 import { module_name } from './configuration.enum';
+import { FindAllConfiguration } from './dto/findAll-configuration.dto';
 
 @ApiTags('Configurações')
 @Controller('configuration')
@@ -22,19 +23,12 @@ export class ConfigurationController {
   @Get()
   @ApiOperation({ summary: 'Lista todas as configurações pelo módulo' })
   @ApiOkResponse({ type: [ConfigurationResponseDto] })
-  findAll(@Query('module_name') module_name:module_name) {
-    return this.configurationService.findAll(module_name);
+  findAll(@Query() dto:FindAllConfiguration) {
+    return this.configurationService.findAll(dto);
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Busca uma configuração pelo ID' })
-  @ApiOkResponse({ type: ConfigurationResponseDto })
-  findOneById(@Param('id') id: string) {
-    return this.configurationService.findOneById(id);
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Busca uma configuração pelo ID' })
+  @Get(':key')
+  @ApiOperation({ summary: 'Busca uma configuração pela KEY' })
   @ApiOkResponse({ type: ConfigurationResponseDto })
   findOneByKey(@Param('key') key: string) {
     return this.configurationService.findOneByKey(key);

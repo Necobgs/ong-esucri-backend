@@ -6,6 +6,7 @@ import { Configuration } from './entities/configuration.entity';
 import { Repository } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { module_name } from './configuration.enum';
+import { FindAllConfiguration } from './dto/findAll-configuration.dto';
 
 @Injectable()
 export class ConfigurationService {
@@ -24,12 +25,20 @@ export class ConfigurationService {
     return await this.configurationRepository.save(config);
   }
 
-  async findAll(module_name:module_name) {
-    return await this.configurationRepository.findBy({module_name});
-  }
+  async findAll(dto:FindAllConfiguration) {
 
-  async findOneById(id: string) {
-    return await this.configurationRepository.findOneBy({id});
+    const skip = (dto.page - 1) * dto.limit;
+    return await this.configurationRepository.find({
+      skip: skip,
+      take: dto.limit,
+      where:{
+        module_name: dto.module_name?? "*",
+        key: dto.key?? "*",
+      },
+      order: {
+        [dto.sortBy]: dto.order,
+      }
+    });
   }
 
   async findOneByKey(key: string) {

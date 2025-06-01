@@ -36,15 +36,9 @@ export class NoticeService {
     return await this.repository.save(notice);
   }
 
-  async findAll(paginationDTO: PaginationDto) {
-    const {
-      page = 1,
-      limit = 10,
-      sortBy = 'created_at',
-      order = 'ASC',
-    } = paginationDTO;
+  async findAll(dto: PaginationDto) {
 
-    const skip = (page - 1) * limit;
+    const skip = (dto.page - 1) * dto.limit;
     return await this.repository.find({
       select: {
         id: true,
@@ -60,9 +54,9 @@ export class NoticeService {
         },
       },
       skip: skip,
-      take: limit,
+      take: dto.limit,
       order: {
-        [sortBy]: order.toUpperCase(),
+        [dto.sortBy]: dto.order.toUpperCase(),
       },
       relations: ['author'],
     });
