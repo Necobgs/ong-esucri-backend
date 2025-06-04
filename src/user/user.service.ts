@@ -70,14 +70,6 @@ export class UserService {
     return updatedUserWithoutPassword;
   }
 
-  async validateUser(email:string,password:string){
-    const user = await this.findByEmail(email);
-    if(user && await bcrypt.compare(password,user.password)){
-      return user;
-    }
-    throw new NotFoundException()
-  }
-
   async remove(id: string) {
     const user = await this.userRepository.findOneByOrFail({id});
     user.activated=false;
