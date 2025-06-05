@@ -25,20 +25,46 @@ export class ConfigurationService {
     return await this.configurationRepository.save(config);
   }
 
-  async findAll(dto:FindAllConfiguration) {
+  async findAll(dto: FindAllConfiguration) {
+    const { page = 1, limit = 10, module_name, key, sortBy = 'id', order = 'ASC' } = dto;
 
-    const skip = (dto.page - 1) * dto.limit;
-    return await this.configurationRepository.find({
-      skip: skip,
-      take: dto.limit,
-      where:{
-        module_name: dto.module_name?? "*",
-        key: dto.key?? "*",
-      },
+    // Lista de colunas permitidas para ordenação
+    const allowedSortColumns = ['id', 'module_name', 'key', 'created_at'];
+    const sortColumn = allowedSortColumns.includes(sortBy) ? sortBy : 'id';
+
+    // Construir condições do where dinamicamente
+    const where: any = {};
+    if (module_name) {
+      where.module_name = module_name;
+    }
+    if (key) {
+      where.key = key;
+    }
+
+    const skip = (page - 1) * limit;
+
+    // Buscar registros e contar total
+    const [items, total] = await this.configurationRepository.findAndCount({
+      where,
+      skip,
+      take: limit,
       order: {
-        [dto.sortBy]: dto.order,
-      }
+        [sortColumn]: order,
+      },
     });
+
+    // Calcular metadados de paginação
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      items,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    };
   }
 
   async findOneByKey(key: string) {
