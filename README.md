@@ -44,6 +44,13 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Run migrations
+
+```bash
+# development
+$ npm run migration:run
+```
+
 ## Run tests
 
 ```bash
