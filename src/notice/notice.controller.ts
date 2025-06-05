@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus, Req, Res, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus, Req, Res, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { NoticeService } from './notice.service';
 import { CreateNoticeDto } from './dto/create-notice.dto';
 import { UpdateNoticeDto } from './dto/update-notice.dto';
@@ -8,6 +8,7 @@ import { NoticeResponseDto } from './dto/response-notice-findAll.dto';
 import { MessageResponseDto } from 'src/common/dto/response-message.dto';
 import { Request,Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Notícias')
 @Controller('notice')
@@ -19,6 +20,7 @@ export class NoticeController {
   @ApiOperation({ summary: 'Cria uma nova notícia' })
   @ApiCreatedResponse({ type: NoticeResponseDto })
   @UseInterceptors(FileInterceptor('file'))
+  @UseGuards(AuthGuard('jwt'))
   create(
     @Body() createNoticeDto: CreateNoticeDto,
     @UploadedFile() file: Express.Multer.File) {

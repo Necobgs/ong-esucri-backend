@@ -46,6 +46,7 @@ export class NoticeService {
         description: true,
         created_at: true,
         view: true,
+        image:true,
         author: {
           id: true,
           username: true,
@@ -63,7 +64,10 @@ export class NoticeService {
   }
 
   async findOne(id: string, req: Request, res: Response) {
-    const notice = await this.repository.findOneBy({ id });
+    const notice = await this.repository.findOne({
+      where:{id},
+      relations:['author']
+    });
     if (!notice) return res.status(HttpStatus.NOT_FOUND).json(null);
     const cookieName = `news_viewed_${id}`;
     const hasViewed = req.cookies[cookieName];
