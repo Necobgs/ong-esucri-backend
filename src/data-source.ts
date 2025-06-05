@@ -15,5 +15,5 @@ export default new DataSource({
   entities: ['src/**/*.entity{.ts,.js}'],
   migrations: ['src/migrations/*{.ts,.js}'],
   synchronize: true,
-  ssl:false
+  ssl:process.env.SSL_ENABLED == 'true' ? true : false
 });
