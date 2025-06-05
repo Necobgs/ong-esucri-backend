@@ -1,16 +1,19 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { module_name } from 'src/configuration/configuration.enum';
 import { stringify } from 'querystring';
 import { EmailDto } from './dtos/email.dto';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class EmailService {
 
     constructor(
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
         private readonly mailerService:MailerService,
-        private readonly configService:ConfigurationService
+        private readonly configService:ConfigurationService,
     ){
         this.updateEmailConfigs()
     }
@@ -33,7 +36,10 @@ export class EmailService {
         })
     }
 
-    async sendToOng(dto:EmailDto){
+    async sendToOng(dto:EmailDto,req:Request,res:Response){
+        const cache_key = `email_cache_${req.ip}_${dto.email_contact}`;
+        console.log(cache_key);
+        if(await this.cacheManager.get(cache_key)) return res.json({sucess:false,message:"Aguarde pelo menos 10 minutos antes de enviar o próximo email de contato"});
         const emailConfigSender   = await this.configService.findOneByKey('email_adress_sender')
         const emailConfigReceiver = await this.configService.findOneByKey('email_adress_receiver')
 
@@ -53,8 +59,9 @@ export class EmailService {
             subject:dto.subject,
             html
         })
-
         await this.sendToContact(dto)
+        await this.cacheManager.set(cache_key,true,1000 * 60 * 10)
+        return res.json({sucess:true})
     }
 
     async updateEmailConfigs(){

@@ -11,6 +11,7 @@ import { EmailModule } from './email/email.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthModule } from './auth/auth.module';
 import * as path from 'path';
+import { CacheModule } from '@nestjs/cache-manager';
 
 
 @Module({
@@ -46,6 +47,10 @@ import * as path from 'path';
         synchronize: true,
         ssl: configService.get("SSL_ENABLED")== 'true' ? true : false,
       }),
+    }),
+    CacheModule.register({
+      isGlobal:true,
+      ttl:600 // 10 minutos
     }),
     NoticeModule,
     UserModule,
