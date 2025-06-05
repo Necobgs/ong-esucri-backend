@@ -44,7 +44,7 @@ import * as path from 'path';
         port: +configService.get('DATABASE_PORT'),
         autoLoadEntities: true,
         synchronize: true,
-        ssl: false,
+        ssl: true,
       }),
     }),
     NoticeModule,
