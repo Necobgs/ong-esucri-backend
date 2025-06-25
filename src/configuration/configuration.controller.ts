@@ -32,10 +32,10 @@ export class ConfigurationController {
     return this.configurationService.findOneByKey(key);
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Atualiza uma configuração existente' })
+  @Patch()
+  @ApiOperation({ summary: 'Atualiza configurações existente' })
   @ApiOkResponse({ type: ConfigurationResponseDto })
-  update(@Param('id') id: string, @Body() updateConfigurationDto: UpdateConfigurationDto) {
-    return this.configurationService.update(id, updateConfigurationDto);
+  update(@Body() updateConfigurationsDto: UpdateConfigurationDto[]) {
+    return this.configurationService.update(updateConfigurationsDto);
   }
 }

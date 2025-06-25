@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateConfigurationDto } from './dto/create-configuration.dto';
 import { UpdateConfigurationDto } from './dto/update-configuration.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -71,13 +71,34 @@ export class ConfigurationService {
     return await this.configurationRepository.findOneBy({key});
   }
 
-  async update(id: string, updateConfigurationDto: UpdateConfigurationDto) {
-    const config = await this.configurationRepository.findOneByOrFail({id});
-    const configUpdated = {
-      ...config,
-      ...updateConfigurationDto
-    }
-    return await this.configurationRepository.save(configUpdated);
+  async update(updateConfigurationDto: UpdateConfigurationDto[]) {
+    return await this.configurationRepository.manager.transaction(async (transactionalEntityManager) => {
+      const updatedConfigs: Configuration[] = [];
+
+      for (const dto of updateConfigurationDto) {
+        // Buscar a configuração pelo ID usando o gerenciador transacional
+        const config = await transactionalEntityManager.findOne(Configuration, {
+          where: { id: dto.id },
+        });
+
+        if (!config) {
+          return new NotFoundException(`Configuração com ID ${dto.id} não encontrada`);
+        }
+
+        // Mesclar os dados do DTO com a configuração existente
+        const configUpdated = {
+          ...config,
+          ...dto,
+          updated_at: new Date(), // Atualizar o timestamp
+        };
+
+        // Salvar a configuração atualizada usando o gerenciador transacional
+        const newConfiguration = await transactionalEntityManager.save(Configuration, configUpdated);
+        updatedConfigs.push(newConfiguration);
+      }
+
+      return updatedConfigs;
+    });
   }
 
 }
