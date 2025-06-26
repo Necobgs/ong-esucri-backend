@@ -82,10 +82,37 @@ export class NoticeService {
     return res.json(notice);
   }
 
-  async update(id: string, updateNoticeDto: UpdateNoticeDto) {
-    const notice = await this.repository.findOneOrFail({ where: { id } });
-    return await this.repository.save({ ...notice, ...updateNoticeDto });
+  async update(id: string, updateNoticeDto: UpdateNoticeDto, file?: Express.Multer.File) {
+  const notice = await this.repository.findOneOrFail({ where: { id } });
+
+  let newFilename = notice.image;
+
+  if (file) {
+    // Apagar imagem antiga, se existir
+    if (notice.image) {
+      const oldImagePath = path.resolve(process.cwd(), 'uploads', notice.image);
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath);
+      }
+    }
+
+    // Salvar nova imagem
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    newFilename = `${uniqueSuffix}${ext}`;
+    const filePath = path.resolve(process.cwd(), 'uploads', newFilename);
+    await fs.writeFileSync(filePath, file.buffer);
   }
+
+  const updatedNotice = {
+    ...notice,
+    ...updateNoticeDto,
+    image: newFilename,
+  };
+
+  return await this.repository.save(updatedNotice);
+}
+
 
   async remove(id: string) {
     const notice = await this.repository.findOneByOrFail({ id });

@@ -13,11 +13,6 @@ export class CreateNoticeDto {
     })
     title:string;
 
-    @ApiProperty({ example: '/uploads/image.jpg', required: false })
-    @IsString()
-    @IsOptional()
-    file: string | null; // Campo opcional para o caminho da imagem
-
     @IsNotEmpty()
     @ApiProperty({
         example:"Conseguir atingir a meta",

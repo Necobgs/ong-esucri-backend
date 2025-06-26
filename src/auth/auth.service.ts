@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt'
@@ -18,7 +18,7 @@ export class AuthService {
         const user = await this.validateUser(dto);
         const payload = { sub:user.id, email:user.id }
         return {
-            acess_token: this.jwtService.sign(payload)
+            access_token: this.jwtService.sign(payload)
         }
     }
 
@@ -28,7 +28,24 @@ export class AuthService {
             const {password, ...result}= user
             return result;
         }
-        throw new NotFoundException()
+        throw new UnauthorizedException()
+  }
+
+  async verifyToken(token: string) {
+    try {
+      // Verifica e decodifica o token
+      const payload = this.jwtService.verify(token);
+      // Busca o usuário associado ao payload
+      const user = await this.userService.findOne(payload.sub);
+      if (!user) {
+        throw new NotFoundException('Usuário não encontrado');
+      }
+      // Retorna os dados do usuário (excluindo informações sensíveis)
+      const { password, ...result } = user;
+      return result;
+    } catch (error) {
+      throw new UnauthorizedException('Token inválido ou expirado');
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Query, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { ConfigurationService } from './configuration.service';
 import { CreateConfigurationDto } from './dto/create-configuration.dto';
 import { UpdateConfigurationDto } from './dto/update-configuration.dto';
@@ -7,6 +7,7 @@ import { ConfigurationResponseDto } from './dto/response-configuration.dto';
 import { module_name } from './configuration.enum';
 import { FindAllConfiguration } from './dto/findAll-configuration.dto';
 import { MODULES_DESCRIPTION } from './moduleDescription';
+import { AuthGuard } from '@nestjs/passport';
 // import { modulesdes }
 
 
@@ -35,6 +36,7 @@ export class ConfigurationController {
   @Patch()
   @ApiOperation({ summary: 'Atualiza configurações existente' })
   @ApiOkResponse({ type: ConfigurationResponseDto })
+  @UseGuards(AuthGuard('jwt'))
   update(@Body() updateConfigurationsDto: UpdateConfigurationDto[]) {
     return this.configurationService.update(updateConfigurationsDto);
   }

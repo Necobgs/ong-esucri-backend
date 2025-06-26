@@ -52,7 +52,7 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    return this.userRepository.findBy({id});
+    return this.userRepository.findOneBy({id});
   }
 
   async findByEmail(email: string) {

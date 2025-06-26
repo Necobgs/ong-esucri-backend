@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,6 +14,7 @@ import {
 } from '@nestjs/swagger';
 import { UserResponseDto } from './dto/response-user.dto';
 import { MessageResponseDto } from 'src/common/dto/response-message.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Usuários') // agrupa endpoints no Swagger
 @Controller('user')
@@ -26,6 +27,7 @@ export class UserController {
     description: 'Usuário criado com sucesso',
     type: UserResponseDto,
   })
+  @UseGuards(AuthGuard('jwt'))
   @ApiBadRequestResponse({ description: 'Email já está em uso' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
@@ -62,6 +64,7 @@ export class UserController {
     description: 'Usuário atualizado com sucesso',
     type: UserResponseDto,
   })
+  @UseGuards(AuthGuard('jwt'))
   @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
@@ -73,6 +76,7 @@ export class UserController {
     description: 'Usuário removido com sucesso',
     type: MessageResponseDto,
   })
+  @UseGuards(AuthGuard('jwt'))
   @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
