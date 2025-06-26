@@ -17,7 +17,7 @@ export class ConfigurationResponseDto {
   created_at: Date;
 
   @ApiProperty({example:"varchar"})
-  type:'varchar' | 'number' | 'html' | 'text';
+  type:'varchar' | 'number' | 'html' | 'text' | `password`;
 
   @ApiProperty({example: "social"})
   module_name: 'email' | 'transaction' | 'social'

@@ -17,7 +17,7 @@ export class Configuration {
     @Column({type:'text',nullable:true})
     value:string;
 
-    @Column({type:"varchar",enum:['varchar', 'number', 'html', 'text']})
+    @Column({type:"varchar",enum:['varchar', 'number', 'html', 'text','password']})
     type: type;
 
     @Column({type:"varchar", enum: ['email', 'transaction', 'social']})

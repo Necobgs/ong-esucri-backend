@@ -51,7 +51,7 @@ export class Configuration1747953583457 implements MigrationInterface {
       key: 'email_passw',
       name: 'Senha do endereço de email',
       value: '',
-      type: type.VARCHAR,
+      type: type.PASSWORD,
       module_name:module_name.EMAIL
     },
     {

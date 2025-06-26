@@ -4,7 +4,6 @@ import { IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator";
 export class CreateNoticeDto {
 
     @IsNotEmpty()
-    @MinLength(5)
     @ApiProperty({
         example:"Marca história batida!",
         description:"Título da notícia",

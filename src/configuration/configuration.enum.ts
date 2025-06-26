@@ -8,6 +8,7 @@ export enum type{
     VARCHAR='varchar',
     NUMBER='number',
     HTML='html',
-    TEXT='text'
+    TEXT='text',
+    PASSWORD='password'
 }
 

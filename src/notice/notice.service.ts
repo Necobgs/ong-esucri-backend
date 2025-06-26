@@ -37,31 +37,35 @@ export class NoticeService {
   }
 
   async findAll(dto: PaginationDto) {
-
-    const skip = (dto.page - 1) * dto.limit;
-    return await this.repository.find({
-      select: {
+  const skip = (dto.page - 1) * dto.limit;
+  const [notices, totalCount] = await this.repository.findAndCount({
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      created_at: true,
+      view: true,
+      image: true,
+      author: {
         id: true,
-        title: true,
-        description: true,
+        username: true,
         created_at: true,
-        view: true,
-        image:true,
-        author: {
-          id: true,
-          username: true,
-          created_at: true,
-          email: true,
-        },
+        email: true,
       },
-      skip: skip,
-      take: dto.limit,
-      order: {
-        [dto.sortBy]: dto.order.toUpperCase(),
-      },
-      relations: ['author'],
-    });
-  }
+    },
+    skip: skip,
+    take: dto.limit,
+    order: {
+      [dto.sortBy]: dto.order.toUpperCase(),
+    },
+    relations: ['author'],
+  });
+
+  return {
+    data: notices,
+    total: totalCount,
+  };
+}
 
   async findOne(id: string, req: Request, res: Response) {
     const notice = await this.repository.findOne({

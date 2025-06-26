@@ -16,7 +16,7 @@ import { UserResponseDto } from './dto/response-user.dto';
 import { MessageResponseDto } from 'src/common/dto/response-message.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-@ApiTags('Usuários') // agrupa endpoints no Swagger
+@ApiTags('Usuários')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

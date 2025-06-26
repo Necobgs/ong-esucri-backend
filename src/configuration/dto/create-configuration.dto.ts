@@ -38,7 +38,7 @@ export class CreateConfigurationDto {
     @IsNotEmpty()
     @IsString()
     @ApiProperty({
-        example:"'varchar' | 'number | 'html' | 'text'",
+        example:"'varchar' | 'number | 'html' | 'text' | 'password'",
         description:"Tipo de dado da configuração",
         type:'string',
         required:true

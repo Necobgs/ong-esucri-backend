@@ -32,8 +32,12 @@ export class NoticeController {
   @Get()
   @ApiOperation({ summary: 'Lista todas as notícias com paginação' })
   @ApiOkResponse({ type: [NoticeResponseDto] })
-  findAll(@Query() pagination: PaginationDto) {
-    return this.noticeService.findAll(pagination);
+  async findAll(@Query() pagination: PaginationDto) {
+    const result = await this.noticeService.findAll(pagination);
+    return {
+      data: result.data,
+      total: result.total,
+    };
   }
 
   @Get(':id')
